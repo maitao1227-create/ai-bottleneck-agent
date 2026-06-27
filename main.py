@@ -1,53 +1,22 @@
-import json
+import os
+from openai import OpenAI
 
-# 模拟新闻（后面会换成真实数据）
-news = [
-    "NVIDIA earnings beat expectations driven by AI demand",
-    "AI datacenter expansion increases demand for HBM memory",
-    "TSMC reports advanced node capacity remains tight"
-]
+client = OpenAI(
+    api_key=os.environ["OPENAI_API_KEY"]
+)
 
-def extract_theme(text):
-    text = text.lower()
-    if "ai" in text:
-        return "AI demand"
-    if "earnings" in text:
-        return "earnings"
-    if "tsmc" in text or "capacity" in text:
-        return "chip supply"
-    return "other"
+response = client.chat.completions.create(
+    model="gpt-4.1-mini",
+    messages=[
+        {
+            "role": "system",
+            "content": "你是一名AI产业投资研究员。回答简洁、专业。"
+        },
+        {
+            "role": "user",
+            "content": "请用一句话告诉我，AI产业未来最大的瓶颈是什么？"
+        }
+    ]
+)
 
-def find_bottleneck(theme):
-    if theme == "AI demand":
-        return "GPU / HBM / 先进制程产能"
-    if theme == "chip supply":
-        return "半导体产能紧张"
-    return "未知"
-
-def map_stocks(bottleneck):
-    if "GPU" in bottleneck:
-        return ["NVDA", "AMD", "AVGO"]
-    if "HBM" in bottleneck:
-        return ["MU", "SK Hynix"]
-    if "半导体" in bottleneck:
-        return ["TSM", "ASML"]
-    return []
-
-def main():
-    themes = [extract_theme(n) for n in news]
-    theme = max(set(themes), key=themes.count)
-
-    bottleneck = find_bottleneck(theme)
-    stocks = map_stocks(bottleneck)
-
-    result = {
-        "市场状态": "risk_on",
-        "主题": theme,
-        "瓶颈": bottleneck,
-        "推荐股票": stocks
-    }
-
-    print(json.dumps(result, indent=2, ensure_ascii=False))
-
-if __name__ == "__main__":
-    main()
+print(response.choices[0].message.content)
