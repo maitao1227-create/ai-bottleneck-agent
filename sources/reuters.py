@@ -1,0 +1,1 @@
+print("Reuters source loaded.")
