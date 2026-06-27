@@ -1,9 +1,9 @@
-name: 每日AI投研代理
+=name: 每日AI投研代理
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"  # 每天 UTC 2点（东京上午11点）
+    - cron: "0 2 * * *"
 
 jobs:
   daily:
@@ -13,24 +13,22 @@ jobs:
       - name: 开始任务
         run: echo "🚀 开始执行每日AI投研任务"
 
-      - name: 创建工作目录
+      - name: 创建目录
         run: mkdir -p data
 
-      - name: 拉取AI相关新闻
+      - name: 拉取AI新闻
         run: |
           echo "正在抓取新闻..."
-          curl -s "https://news.google.com/rss/search?q=AI+stocks" > data/news.xml
-          echo "新闻抓取完成"
+          curl -L "https://news.google.com/rss/search?q=AI+stocks&hl=en-US&gl=US&ceid=US:en" -o data/news.xml
+          echo "抓取完成"
 
       - name: 检查文件
-        run: |
-          echo "=== 文件列表 ==="
-          ls -lh data
+        run: ls -lh data
 
-      - name: 预览新闻内容
+      - name: 查看新闻摘要
         run: |
-          echo "=== 新闻片段 ==="
-          head -n 30 data/news.xml
+          echo "=== 前20行 ==="
+          sed -n '1,20p' data/news.xml
 
-      - name: 完成
-        run: echo "✅ 今日任务完成"
+      - name: 成功结束
+        run: echo "✅ 完成"
