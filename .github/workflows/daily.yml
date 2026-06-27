@@ -1,15 +1,18 @@
-=name: 每日AI投研代理
+name: 每日AI投研代理
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 允许你手动点击“行动”按钮触发
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 2 * * *" # 每日定时运行
 
 jobs:
-  daily:
+  daily_job:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
       - name: 开始任务
         run: echo "🚀 开始执行每日AI投研任务"
 
@@ -18,16 +21,16 @@ jobs:
 
       - name: 拉取AI新闻
         run: |
-          echo "正在抓取新闻..."
+          echo "正在抽取新闻..."
           curl -L "https://news.google.com/rss/search?q=AI+stocks&hl=en-US&gl=US&ceid=US:en" -o data/news.xml
-          echo "抓取完成"
+          echo "收尾完成"
 
       - name: 检查文件
         run: ls -lh data
 
       - name: 查看新闻摘要
         run: |
-          echo "=== 前20行 ==="
+          echo "===前20行==="
           sed -n '1,20p' data/news.xml
 
       - name: 成功结束
