@@ -1,15 +1,36 @@
-name: Daily AI Agent
+name: 每日AI投研代理
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"  # 每天 UTC 2点（东京上午11点）
 
 jobs:
-  test:
+  daily:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Hello
-        run: echo "Hello Agent!"
-- name: 拉取AI相关新闻
-  run: |
-    curl -s "https://news.google.com/rss/search?q=AI+stocks" | head -n 30
+      - name: 开始任务
+        run: echo "🚀 开始执行每日AI投研任务"
+
+      - name: 创建工作目录
+        run: mkdir -p data
+
+      - name: 拉取AI相关新闻
+        run: |
+          echo "正在抓取新闻..."
+          curl -s "https://news.google.com/rss/search?q=AI+stocks" > data/news.xml
+          echo "新闻抓取完成"
+
+      - name: 检查文件
+        run: |
+          echo "=== 文件列表 ==="
+          ls -lh data
+
+      - name: 预览新闻内容
+        run: |
+          echo "=== 新闻片段 ==="
+          head -n 30 data/news.xml
+
+      - name: 完成
+        run: echo "✅ 今日任务完成"
