@@ -10,11 +10,11 @@ response = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "你是一名AI产业投资研究员。回答简洁、专业。"
+            "content": "你是一位AI产业投资研究员。"
         },
         {
             "role": "user",
-            "content": "请用一句话告诉我，AI产业未来最大的瓶颈是什么？"
+            "content": "请告诉我一句话：AI产业未来最大的瓶颈是什么？"
         }
     ]
 )
