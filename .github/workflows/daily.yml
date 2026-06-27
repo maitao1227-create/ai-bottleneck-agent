@@ -10,3 +10,6 @@ jobs:
     steps:
       - name: Hello
         run: echo "Hello Agent!"
+- name: 拉取AI相关新闻
+  run: |
+    curl -s "https://news.google.com/rss/search?q=AI+stocks" | head -n 30
